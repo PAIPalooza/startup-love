@@ -1,0 +1,97 @@
+[
+  {
+    "title": "Auth: Sign Up / Login with Role Assignment",
+    "body": "As a user, I want to sign up and choose my role (Founder or Investor) so I can access my specific dashboard.",
+    "labels": ["epic:auth", "role:frontend", "points:2"]
+  },
+  {
+    "title": "Auth: Session Persistence & Logout",
+    "body": "As a user, I want to stay logged in during the session and be able to log out securely.",
+    "labels": ["epic:auth", "role:frontend", "points:1"]
+  },
+  {
+    "title": "Founder: Create Company Profile",
+    "body": "As a Founder, I want to create a company profile with fields like name, industry, stage, and description.",
+    "labels": ["epic:founder-dashboard", "role:frontend", "points:2"]
+  },
+  {
+    "title": "Founder: Add Team Members",
+    "body": "As a Founder, I want to add co-founders and employees with roles and equity percentages.",
+    "labels": ["epic:founder-dashboard", "role:frontend", "points:2"]
+  },
+  {
+    "title": "Founder: View Compliance Status",
+    "body": "As a Founder, I want to see KYB/KYC compliance status on my dashboard.",
+    "labels": ["epic:founder-dashboard", "role:frontend", "points:1"]
+  },
+  {
+    "title": "Documents: Upload Pitch Deck",
+    "body": "As a Founder, I want to upload pitch decks and term sheets with proper labels and access control.",
+    "labels": ["epic:documents", "role:frontend", "points:2"]
+  },
+  {
+    "title": "Documents: Embed Document Using pgvector",
+    "body": "As a system, I want to chunk and embed uploaded documents for semantic search and matching.",
+    "labels": ["epic:documents", "role:backend", "points:3"]
+  },
+  {
+    "title": "Investor: Browse Fundable Startups",
+    "body": "As an Investor, I want to browse a list of available startups with industry filters.",
+    "labels": ["epic:investor-dashboard", "role:frontend", "points:2"]
+  },
+  {
+    "title": "Investor: View Company Details & Metrics",
+    "body": "As an Investor, I want to view a company’s profile, metrics, and uploaded documents.",
+    "labels": ["epic:investor-dashboard", "role:frontend", "points:2"]
+  },
+  {
+    "title": "Investor: Request Intro / Commit to Invest",
+    "body": "As an Investor, I want to express interest or commit to invest in a company or SPV.",
+    "labels": ["epic:investor-dashboard", "role:frontend", "points:2"]
+  },
+  {
+    "title": "SPV: Show Active SPVs",
+    "body": "As a Founder, I want to view active SPVs linked to my company.",
+    "labels": ["epic:spv", "role:frontend", "points:2"]
+  },
+  {
+    "title": "Cap Table: Render Cap Table Viewer",
+    "body": "As a user, I want to view a simplified cap table showing equity classes and ownership percentage.",
+    "labels": ["epic:spv", "role:frontend", "points:3"]
+  },
+  {
+    "title": "Semantic Matching: Embed Investor & Company Profiles",
+    "body": "As a system, I want to embed profiles using vector representations for smart search.",
+    "labels": ["epic:matching", "role:backend", "points:2"]
+  },
+  {
+    "title": "Semantic Matching: Build Matching API for Investors",
+    "body": "As an Investor, I want to find relevant startups based on my investment thesis via semantic search.",
+    "labels": ["epic:matching", "role:backend", "points:3"]
+  },
+  {
+    "title": "Notifications: Notify Founder When Deck is Viewed",
+    "body": "As a Founder, I want to be notified when an Investor views my deck or profile.",
+    "labels": ["epic:notifications", "role:backend", "points:1"]
+  },
+  {
+    "title": "Notifications: Basic Notification Center",
+    "body": "As a user, I want to see all my notifications in one place.",
+    "labels": ["epic:notifications", "role:frontend", "points:2"]
+  },
+  {
+    "title": "Deployment: Smoke Test Dashboards",
+    "body": "As a QA or dev, I want to test both dashboards (Founder/Investor) to ensure they render correctly.",
+    "labels": ["epic:qa", "role:qa", "points:1"]
+  },
+  {
+    "title": "Deployment: Deploy MVP to Vercel",
+    "body": "As a dev, I want to deploy the working MVP to Vercel for demo access.",
+    "labels": ["epic:qa", "role:devops", "points:1"]
+  },
+  {
+    "title": "Deployment: Seed Sample Data",
+    "body": "As a dev, I want to seed 2 Founders, 2 Investors, and 2 Companies with sample docs for demo purposes.",
+    "labels": ["epic:qa", "role:backend", "points:1"]
+  }
+]
