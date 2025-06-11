@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react';
-import { ChevronRight, Info, AlertCircle } from 'lucide-react';
+import { ChevronRight, AlertCircle } from 'lucide-react';
 
 interface SpvItem {
     id: string;
@@ -21,6 +21,27 @@ interface SpvManagementProps {
     onJoinSpv: (spvId: string) => void;
     onViewDetails: (spvId: string) => void;
 }
+
+// Utility function to convert percentage to appropriate width class
+const getProgressWidthClass = (percentage: number): string => {
+  // Ensure the percentage is between 0-100
+  const safePercentage = Math.min(Math.max(Math.round(percentage), 0), 100);
+  
+  // Map percentage to Tailwind width classes (w-1/12 to w-full)
+  if (safePercentage === 0) return 'w-0';
+  if (safePercentage <= 8) return 'w-1/12';
+  if (safePercentage <= 16) return 'w-2/12';
+  if (safePercentage <= 25) return 'w-3/12';
+  if (safePercentage <= 33) return 'w-4/12';
+  if (safePercentage <= 41) return 'w-5/12';
+  if (safePercentage <= 50) return 'w-6/12';
+  if (safePercentage <= 58) return 'w-7/12';
+  if (safePercentage <= 66) return 'w-8/12';
+  if (safePercentage <= 75) return 'w-9/12';
+  if (safePercentage <= 83) return 'w-10/12';
+  if (safePercentage <= 91) return 'w-11/12';
+  return 'w-full';
+};
 
 export function SpvManagement({ spvs, onJoinSpv, onViewDetails }: SpvManagementProps) {
     const [expandedSpvId, setExpandedSpvId] = useState<string | null>(null);
@@ -101,10 +122,9 @@ export function SpvManagement({ spvs, onJoinSpv, onViewDetails }: SpvManagementP
                                                     <span className="font-medium">${spv.raised_amount.toLocaleString()} raised</span>
                                                     <span className="text-gray-500">of ${spv.target_amount.toLocaleString()} target</span>
                                                 </div>
-                                                <div className="w-full bg-gray-200 rounded-full h-2.5">
+                                                <div className="w-full bg-gray-200 rounded-full h-2">
                                                     <div 
-                                                        className="bg-indigo-600 h-2.5 rounded-full" 
-                                                        style={{ width: `${calculateProgress(spv.raised_amount, spv.target_amount)}%` }}
+                                                        className={`bg-indigo-600 h-2 rounded-full ${getProgressWidthClass(calculateProgress(spv.raised_amount, spv.target_amount))}`}
                                                     ></div>
                                                 </div>
                                             </div>

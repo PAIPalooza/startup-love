@@ -54,7 +54,7 @@ describe('SpvManagement Component', () => {
         expect(screen.getByText('Healthcare Innovation Fund')).toBeInTheDocument();
     });
 
-    it('should display SPV details correctly', () => {
+    it('should display SPV details correctly', async () => {
         render(
             <SpvManagement 
                 spvs={mockSpvs} 
@@ -63,15 +63,33 @@ describe('SpvManagement Component', () => {
             />
         );
         
-        // Check first SPV details
-        expect(screen.getByText('TechCorp')).toBeInTheDocument();
-        expect(screen.getByText('$350,000 raised')).toBeInTheDocument();
-        expect(screen.getByText('of $500,000 target')).toBeInTheDocument();
+        // First SPV - check basic info visible without expanding
+        expect(screen.getByText('Tech Ventures SPV')).toBeInTheDocument();
+        expect(screen.getByText(/TechCorp/)).toBeInTheDocument(); // Target company is visible in collapsed view
         
-        // Check second SPV details
-        expect(screen.getByText('MediHealth')).toBeInTheDocument();
-        expect(screen.getByText('$750,000 raised')).toBeInTheDocument();
-        expect(screen.getByText('of $750,000 target')).toBeInTheDocument();
+        // Expand first SPV panel
+        const techSpvPanel = screen.getByText('Tech Ventures SPV');
+        fireEvent.click(techSpvPanel);
+        
+        // Now check for details that are only visible when expanded
+        await waitFor(() => {
+            expect(screen.getByText('$350,000 raised')).toBeInTheDocument();
+            expect(screen.getByText('of $500,000 target')).toBeInTheDocument();
+        });
+        
+        // Second SPV - check basic info visible without expanding
+        expect(screen.getByText('Healthcare Innovation Fund')).toBeInTheDocument();
+        expect(screen.getByText(/MediHealth/)).toBeInTheDocument();
+        
+        // Expand second SPV panel
+        const healthSpvPanel = screen.getByText('Healthcare Innovation Fund');
+        fireEvent.click(healthSpvPanel);
+        
+        // Now check for details that are only visible when expanded
+        await waitFor(() => {
+            expect(screen.getByText('$750,000 raised')).toBeInTheDocument();
+            expect(screen.getByText('of $750,000 target')).toBeInTheDocument();
+        });
     });
 
     it('should handle join SPV button click', async () => {
@@ -83,9 +101,15 @@ describe('SpvManagement Component', () => {
             />
         );
         
-        // Find the join button for the first SPV and click it
-        const joinButtons = screen.getAllByText('Join SPV');
-        fireEvent.click(joinButtons[0]);
+        // First expand the SPV panel by clicking on its header
+        const techSpvPanel = screen.getByText('Tech Ventures SPV');
+        fireEvent.click(techSpvPanel);
+        
+        // Now that the panel is expanded, find and click the Join SPV button
+        await waitFor(() => {
+            const joinButton = screen.getByText('Join SPV');
+            fireEvent.click(joinButton);
+        });
         
         await waitFor(() => {
             expect(mockJoinSpv).toHaveBeenCalledWith('1');
@@ -101,9 +125,15 @@ describe('SpvManagement Component', () => {
             />
         );
         
-        // Find the view details button for the second SPV and click it
-        const viewDetailsButtons = screen.getAllByText('View Details');
-        fireEvent.click(viewDetailsButtons[1]);
+        // First expand the SPV panel by clicking on its header
+        const spvPanels = screen.getAllByText(/Tech Ventures SPV|Healthcare Innovation Fund/);
+        fireEvent.click(spvPanels[1]); // Click on the second SPV panel (Healthcare Innovation Fund)
+        
+        // Now that the panel is expanded, find and click the View Details button
+        await waitFor(() => {
+            const viewDetailsButton = screen.getAllByText('View Details')[0];
+            fireEvent.click(viewDetailsButton);
+        });
         
         await waitFor(() => {
             expect(mockViewDetails).toHaveBeenCalledWith('2');

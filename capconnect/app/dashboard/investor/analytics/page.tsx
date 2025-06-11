@@ -1,7 +1,6 @@
 import { requireAuth, createDemoUser } from '@/lib/auth'
 import { createServerSupabaseClient } from '@/lib/supabase'
 import { Navigation } from '@/components/ui/navigation'
-import { AnalyticsDashboard } from '@/components/ui/analytics-dashboard'
 
 interface Props {
     searchParams: { demo?: string }
@@ -167,7 +166,10 @@ export default async function InvestorAnalyticsPage({ searchParams }: Props) {
                             <div className="flex justify-between items-center mb-6">
                                 <h2 className="text-2xl font-semibold text-gray-900">Portfolio Analytics</h2>
                                 <div>
+                                    <label htmlFor="portfolio-filter" className="sr-only">Filter Portfolio</label>
                                     <select 
+                                        id="portfolio-filter"
+                                        aria-label="Filter Portfolio"
                                         className="p-2 border border-gray-300 rounded text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                         defaultValue="all"
                                     >

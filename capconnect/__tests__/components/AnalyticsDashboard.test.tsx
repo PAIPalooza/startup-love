@@ -3,6 +3,17 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { AnalyticsDashboard } from '@/components/ui/analytics-dashboard';
 
+// Mock ResizeObserver which is required by recharts
+beforeAll(() => {
+  Object.defineProperty(window, 'ResizeObserver', {
+    value: jest.fn().mockImplementation(() => ({
+      observe: jest.fn(),
+      unobserve: jest.fn(),
+      disconnect: jest.fn()
+    }))
+  });
+});
+
 // Mock data for testing
 const mockMetrics = {
     investorViews: [
@@ -27,27 +38,50 @@ const mockMetrics = {
 };
 
 describe('AnalyticsDashboard Component', () => {
+    // Add a before/after hook to suppress chart warnings for all tests
+    let originalConsoleWarn: typeof console.warn;
+    
+    beforeAll(() => {
+        originalConsoleWarn = console.warn;
+        console.warn = jest.fn();
+    });
+    
+    afterAll(() => {
+        console.warn = originalConsoleWarn;
+    });
+
     it('should render the analytics dashboard with charts', () => {
-        render(<AnalyticsDashboard metrics={mockMetrics} />);
+        // We just test that the component renders without errors
+        const { container } = render(<AnalyticsDashboard metrics={mockMetrics} />);
         
+        // Basic content assertions
         expect(screen.getByText('Analytics Dashboard')).toBeInTheDocument();
         expect(screen.getByText('Investor Profile Views')).toBeInTheDocument();
         expect(screen.getByText('Document Views')).toBeInTheDocument();
         expect(screen.getByText('Investor Engagement')).toBeInTheDocument();
+        
+        // Check that chart containers are present (we don't need to check the specific recharts elements)
+        expect(container.querySelectorAll('.h-64').length).toBeGreaterThan(0);
     });
 
     it('should display the investor engagement table', () => {
         render(<AnalyticsDashboard metrics={mockMetrics} />);
         
+        // Check for table content
         expect(screen.getByText('John Doe')).toBeInTheDocument();
         expect(screen.getByText('Jane Smith')).toBeInTheDocument();
         expect(screen.getByText('Robert Johnson')).toBeInTheDocument();
+        
+        // Check for score numbers - using regex to match text that includes the percentage values
+        expect(screen.getByText(/85%/)).toBeInTheDocument();
+        expect(screen.getByText(/92%/)).toBeInTheDocument();
     });
 
     it('should show an export button', () => {
         render(<AnalyticsDashboard metrics={mockMetrics} />);
         
-        expect(screen.getByText('Export PDF')).toBeInTheDocument();
+        // Look for the export button by its text content
+        expect(screen.getByText(/Export PDF/i)).toBeInTheDocument();
     });
 
     it('should display placeholders when no data is available', () => {

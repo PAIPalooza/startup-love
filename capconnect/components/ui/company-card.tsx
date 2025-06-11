@@ -14,6 +14,7 @@ interface Company {
   current_raised: number
   website?: string
   users?: {
+    id?: string
     full_name: string
     is_verified: boolean
   }
@@ -28,6 +29,27 @@ interface Company {
 interface CompanyCardProps {
   company: Company
 }
+
+// Utility function to convert percentage to appropriate width class
+const getProgressWidthClass = (percentage: number): string => {
+  // Ensure the percentage is between 0-100
+  const safePercentage = Math.min(Math.max(Math.round(percentage), 0), 100);
+  
+  // Map percentage to Tailwind width classes (w-1/12 to w-full)
+  if (safePercentage === 0) return 'w-0';
+  if (safePercentage <= 8) return 'w-1/12';
+  if (safePercentage <= 16) return 'w-2/12';
+  if (safePercentage <= 25) return 'w-3/12';
+  if (safePercentage <= 33) return 'w-4/12';
+  if (safePercentage <= 41) return 'w-5/12';
+  if (safePercentage <= 50) return 'w-6/12';
+  if (safePercentage <= 58) return 'w-7/12';
+  if (safePercentage <= 66) return 'w-8/12';
+  if (safePercentage <= 75) return 'w-9/12';
+  if (safePercentage <= 83) return 'w-10/12';
+  if (safePercentage <= 91) return 'w-11/12';
+  return 'w-full';
+};
 
 export function CompanyCard({ company }: CompanyCardProps) {
   const [showInvestModal, setShowInvestModal] = useState(false)
@@ -61,10 +83,10 @@ export function CompanyCard({ company }: CompanyCardProps) {
       if (error) throw error
 
       // Create notification for founder
-      const { error: notificationError } = await supabase
+      await supabase
         .from('notifications')
         .insert({
-          user_id: company.users?.id, // This would need to be fetched properly
+          user_id: company.users?.id || '', // Use empty string as fallback
           message: `New investment commitment of $${amount} from an investor`,
           type: 'commitment',
           related_id: company.id
@@ -114,8 +136,8 @@ export function CompanyCard({ company }: CompanyCardProps) {
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div 
-                className="bg-indigo-600 h-2 rounded-full" 
-                style={{ width: `${Math.min(fundingProgress, 100)}%` }}
+                className={`bg-indigo-600 h-2 rounded-full transition-all duration-300 ${getProgressWidthClass(fundingProgress)}`} 
+                data-testid="progress-bar"
               />
             </div>
           </div>
@@ -174,10 +196,11 @@ export function CompanyCard({ company }: CompanyCardProps) {
             
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700">
+                <label htmlFor="investment-amount" className="block text-sm font-medium text-gray-700">
                   Investment Amount ($)
                 </label>
                 <input
+                  id="investment-amount"
                   type="number"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
@@ -187,10 +210,11 @@ export function CompanyCard({ company }: CompanyCardProps) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">
+                <label htmlFor="investment-instrument" className="block text-sm font-medium text-gray-700">
                   Instrument
                 </label>
                 <select
+                  id="investment-instrument"
                   value={instrument}
                   onChange={(e) => setInstrument(e.target.value)}
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
